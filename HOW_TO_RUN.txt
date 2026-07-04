@@ -1,0 +1,11 @@
+CBSE Question Bank Builder - Run Steps
+
+1. Extract this folder.
+2. Open terminal/cmd in this folder.
+3. Run: python -m pip install -r requirements.txt
+4. Run: python app\server.py
+5. Open browser: http://127.0.0.1:8000
+
+Shortcut: double-click run_portal.bat on Windows.
+
+Note: Upload a Maths PDF from the portal. The app will create data/question_bank.sqlite3 automatically.

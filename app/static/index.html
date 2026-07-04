@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CBSE Question Bank Builder</title>
+    <link rel="stylesheet" href="/static/styles.css?v=20">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero glass">
+        <div>
+          <h1>CBSE Question Bank Builder</h1>
+          <p>AI Powered Question Extraction System</p>
+          <p>Upload • Analyze • Categorize • Export</p>
+        </div>
+        <button id="themeButton" type="button">Light Mode</button>
+      </section>
+      <section class="stats">
+        <article class="stat glass">
+          <strong id="totalQuestions">0</strong>
+          <span>Total Questions</span>
+        </article>
+        <article class="stat glass">
+          <strong>ON</strong>
+          <span>Dark Mode</span>
+        </article>
+        <article class="stat glass">
+          <strong id="searchActive">NO</strong>
+          <span>Search Active</span>
+        </article>
+      </section>
+      <section class="toolbar glass">
+        <form id="uploadForm" class="upload-box">
+          <label class="file-picker" for="pdfFile">
+            <span class="upload-icon">↥</span>
+            <span><strong>Upload PDF</strong><small>Tap to select your PDF</small></span>
+          </label>
+          <input id="pdfFile" name="file" type="file" accept="application/pdf">
+          <button type="submit">Upload PDF</button>
+          <button id="downloadJson" type="button">Download JSON</button>
+          <input id="searchInput" type="search" placeholder="Search questions...">
+          <p id="uploadStatus" class="status"></p>
+        </form>
+        <div class="filters">
+          <select id="sourceFilter"><option value="">Select PDF</option></select>
+          <select id="topicFilter"><option value="">All topics</option></select>
+          <select id="marksFilter">
+            <option value="">All marks</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          </select>
+          <button id="refreshButton" type="button">Refresh</button>
+        </div>
+      </section>
+      <section class="section-title">
+        <h2>Extracted Questions</h2>
+        <p id="countLabel">Total Questions: 0</p>
+      </section>
+      <section id="questions" class="questions"></section>
+    </main>
+    <script src="/static/app.js?v=20"></script>
+  </body>
+</html>
