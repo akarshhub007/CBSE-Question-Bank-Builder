@@ -35,6 +35,10 @@ const totalQuestions = document.querySelector("#totalQuestions");
 const searchActive = document.querySelector("#searchActive");
 const uploadStatus = document.querySelector("#uploadStatus");
 const themeButton = document.querySelector("#themeButton");
+const themeButtonText = document.querySelector("#themeButtonText");
+const themeState = document.querySelector("#themeState");
+const themeStateLabel = document.querySelector("#themeStateLabel");
+const downloadJsonButton = document.querySelector("#downloadJson");
 let activeSourcePdfId = "";
 let currentQuestions = [];
 let availableSources = [];
@@ -81,7 +85,7 @@ sourceFilter.addEventListener("change", async () => {
 topicFilter.addEventListener("change", loadQuestions);
 marksFilter.addEventListener("change", loadQuestions);
 searchInput.addEventListener("input", () => renderQuestions(filterQuestions(currentQuestions)));
-document.querySelector("#downloadJson").addEventListener("click", downloadJson);
+downloadJsonButton.addEventListener("click", downloadJson);
 themeButton.addEventListener("click", () => {
   const next = document.body.classList.contains("light-mode") ? "dark" : "light";
   localStorage.setItem("theme", next);
@@ -123,6 +127,7 @@ function renderQuestions(questions) {
   countLabel.textContent = `Total Questions: ${questions.length}`;
   totalQuestions.textContent = questions.length;
   searchActive.textContent = searchInput.value.trim() ? "YES" : "NO";
+  updateDownloadButton(questions.length);
   questionsEl.innerHTML = "";
   if (questions.length === 0) {
     questionsEl.innerHTML = activeSourcePdfId
@@ -262,13 +267,34 @@ function normalizeTableLines(lines) {
 }
 
 function downloadJson() {
-  const payload = JSON.stringify(filterQuestions(currentQuestions), null, 2);
+  const questions = filterQuestions(currentQuestions);
+  if (!activeSourcePdfId || questions.length === 0) {
+    uploadStatus.textContent = activeSourcePdfId
+      ? "No questions available to download."
+      : "Upload a PDF before downloading JSON.";
+    updateDownloadButton(0);
+    return;
+  }
+  const selected = availableSources.find((source) => source.id === activeSourcePdfId);
+  const safeName = (selected?.filename || "questions")
+    .replace(/\.pdf$/i, "")
+    .replace(/[^a-z0-9_-]+/gi, "_")
+    .replace(/^_+|_+$/g, "");
+  const payload = JSON.stringify(questions, null, 2);
   const url = URL.createObjectURL(new Blob([payload], { type: "application/json" }));
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = "questions.json";
+  anchor.download = `${safeName || "questions"}.json`;
   anchor.click();
   URL.revokeObjectURL(url);
+}
+
+function updateDownloadButton(questionCount) {
+  const disabled = !activeSourcePdfId || questionCount === 0;
+  downloadJsonButton.disabled = disabled;
+  downloadJsonButton.title = disabled
+    ? "Upload a PDF and extract questions first"
+    : "Download extracted questions as JSON";
 }
 
 function options(values, selected) {
@@ -289,7 +315,10 @@ function escapeHtml(value) {
 function applyTheme(theme) {
   const light = theme === "light";
   document.body.classList.toggle("light-mode", light);
-  themeButton.textContent = light ? "Dark Mode" : "Light Mode";
+  themeButton.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+  themeButtonText.textContent = light ? "Dark" : "Light";
+  themeState.textContent = light ? "LIGHT" : "DARK";
+  themeStateLabel.textContent = "Current Theme";
 }
 
 loadSources().then(loadQuestions);
