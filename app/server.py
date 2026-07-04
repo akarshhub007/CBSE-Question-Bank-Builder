@@ -1,4 +1,5 @@
 import json
+import os
 import re
 import sys
 from http import HTTPStatus
@@ -179,8 +180,13 @@ def _parse_multipart_file(body, boundary):
 
 def main():
     init_db()
-    server = ThreadingHTTPServer(("127.0.0.1", 8000), Handler)
-    print("CBSE Question Bank Builder running at http://127.0.0.1:8000")
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "8000"))
+    if "PORT" in os.environ and "HOST" not in os.environ:
+        host = "0.0.0.0"
+    server = ThreadingHTTPServer((host, port), Handler)
+    display_host = "127.0.0.1" if host == "0.0.0.0" else host
+    print(f"CBSE Question Bank Builder running at http://{display_host}:{port}")
     server.serve_forever()
 
 

@@ -58,5 +58,5 @@ python -m unittest discover tests
 1. Add OCR routing for scanned PDFs.
 2. Move processing into Celery + Redis.
 3. Replace SQLite with Postgres migrations.
-4. Add LLM topic/difficulty classifier behind the rule-based first pass.
+4. Improve the topic and difficulty classifier behind the rule-based first pass.
 5. Add advanced math OCR for formulas that PDFs store as positioned glyphs.
