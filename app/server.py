@@ -134,7 +134,7 @@ class Handler(BaseHTTPRequestHandler):
         return self._send_file(file_path, content_type)
 
     def _send_file(self, file_path, content_type):
-        if not file_path.exists():
+        if not file_path.exists() or not file_path.is_file():
             return self._json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
         content = file_path.read_bytes()
         self.send_response(HTTPStatus.OK)
